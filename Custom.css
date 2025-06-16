@@ -1,0 +1,133 @@
+/*! CustomCSS*/
+:root
+  
+    color: var(--main-color)!important;}
+    .username__05e81 {color:var(--main-color);}
+    
+    .tabBar-2hXqzU>.item-3XjbnG.selected-g-kMVV, .tabBar-2hXqzU>.item-3XjbnG, .tabBar-2hXqzU> .tabBarItem_b9fccc[style*="color: rgb(255, 255, 255)"] .item-3XjbnG {
+    color: var(--main-color)!important;}
+    
+    .additionalActionsIcon-3Cy8UU {
+    background: url(https://mysticentity.github.io/CustomBetterDiscordCSS/Expand_More.svg) center/36px no-repeat !important;}
+      
+      .textarea_dde0a8::placeholder {
+      color: #13A10E;
+    }
+      .inputDefault-3FGxgL, .input-2g-os5, .input_df4dd0::placeholder {
+          color:var(--main-color)!important;
+    }
+    
+    .connectedAccountNameText-2m46Qn {
+    color: var(--main-color)!important;
+    }
+      
+    .textarea_dde0a8::placeholder, .body-1Ukv50 .userInfoSection-2u2hir>.note-3M15gE>textarea::placeholder {
+      color: var(--main-color);
+    }
+     .placeholder__1b31f {
+      color: var(--main-color)!important;
+    }
+    
+    .tabBar__133bf .item__133bf {
+        color: var(--main-color)!important;
+    }
+    
+    .input__48d49 {
+        background: black;
+    }
+    
+    .container__33507 {
+        background-color: var(--main-color);
+    }
+    
+    .tabBar__133bf .addFriend__133bf.addFriend__133bf.addFriend__133bf[aria-selected=true] {
+        background-color: var(--background-modifier-selected);}
+    
+        .input__72ba7 {
+        background-color: black;
+    }
+    
+    .addFriendInputWrapper__72ba7 {
+        background-color: black;
+        box-shadow: 0 0 0 2px var(--main-color);
+        border: none;
+    }
+    .lookFilled__201d5.colorBrand__201d5:disabled, .lookFilled__201d5.colorBrand__201d5[aria-disabled=true] {
+        background-color: var(--main-color)!important;
+    }
+    
+    .actionButtons_e131a9 {
+    background-color: black;
+    }
+    
+    .container_e131a9 {
+        border-color: rgba(0,0,0,0);
+        background-color: black;
+    }
+    
+    .button_e131a9.buttonColor_e131a9.buttonActive_e131a9 {
+        color: var(--main-color);
+        background-color: var(--background-modifier-selected);
+    }
+    
+    .button_e131a9.buttonColor_e131a9.buttonActive_e131a9:hover {
+        color: var(--main-color);
+        background-color: var(--background-modifier-selected)!important;
+    }
+    
+    .text-sm-medium_bc6ffc, .text-sm-normal__95a78 {
+        color: var(--main-color)!important;
+    }
+    
+    .button__67645 {
+        opacity: 1;
+        color: var(--main-color);
+    }
+    
+    .panels_c48ade>:first-child {
+        background-color: black;
+    }
+    
+    .searchBar__35e86 .searchBarComponent__35e86 {
+        color: var(--main-color);
+    }
+    
+    .container_e131a9 {
+        background-color:black;
+    }
+    
+    .button_e131a9.buttonColor_e131a9.buttonActive_e131a9:hover {
+        color: var(--main-color);
+        background-color: var(--background-modifier-selected);
+    }
+    
+    .headerText_e4cb9a, .participantName__2cdb8, .header_c6e099, .bottomControls_e4cb9a, .controlIcon_f1ceac:hover {color: var(--background-modifier-selected)!important;}
+    
+    .scrollerBase__99f8c {
+        background-color: black!important;
+    }
+    
+    .panelBanner_c3e427 {
+      background-color: black!important;
+    ;
+    }
+    
+    .userPanelOverlayBackground_a2b6ae, .userProfileModalOverlayBackground_c69a7b {
+        background-color: black!important;
+    }
+    
+    .defaultColor_e9e35f {
+        color: var(--main-color)!important;
+    }
+    
+    .userTagUsernameBase_c9ccf6 {
+        color: var(--hover-color);
+    }
+    
+    .icon__2ea32 {
+        color: var(--main-color)!important;
+    }
+    
+    .icon__2ea32 {
+        color: var(--main-color)!important;
+    }
