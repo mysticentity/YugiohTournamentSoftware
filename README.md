@@ -1,3 +1,7 @@
+This is a work in progress, expect more updates in the future.
+
+
+
 1. Here is how the program works: you will enter each user you wish to add to the tournament one by one. 
 2. Once they've been added and you're ready to start, you simply hit Start tournament.
 3. Next you can individually click on a table and select a person to be the winner or whether they both tied and whether or not one of those players is dropping, Select submit match.
