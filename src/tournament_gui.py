@@ -47,20 +47,20 @@ class TournamentGUI:
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
 
+        file_menu = tk.Menu(menubar, tearoff=0)
+        file_menu.add_command(label="Exit", command=self.root.quit)
+        menubar.add_cascade(label="File", menu=file_menu)
+
         tournament_menu = tk.Menu(menubar, tearoff=0)
         tournament_menu.add_command(label="Submit Round Results", command=self.submit_results)
         tournament_menu.add_command(label="View Standings", command=self.view_standings)
         tournament_menu.add_command(label="Undo Last Round", command=self.undo_last_round)
         tournament_menu.add_command(label="Add Late Player", command=self.add_late_player)
-        menubar.add_cascade(label="Tournament", menu=tournament_menu)
-
-        file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Exit", command=self.root.quit)
-        menubar.add_cascade(label="File", menu=file_menu)
+        menubar.add_cascade(label="Options", menu=tournament_menu)
 
         help_menu = tk.Menu(menubar, tearoff=0)
         help_menu.add_command(label="About", command=lambda: messagebox.showinfo("About", "Tournament Software Created by James Cunningam/Princeblueblood. \nBuilt with ❤️ using Tkinter."))
-        help_menu.add_command(label="Usage", command=lambda: messagebox.showinfo("About", "You can add players, remove players, Submit match results, view standings, and redo last round."))
+        help_menu.add_command(label="Usage", command=lambda: messagebox.showinfo("Info:", "You can add players, remove players, Submit match results, view standings, and redo last round."))
         menubar.add_cascade(label="Help", menu=help_menu)
 
     def clear_screen(self):
