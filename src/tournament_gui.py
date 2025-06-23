@@ -28,7 +28,6 @@ class TournamentGUI:
         font = ("Segoe UI", 11)
         bg = "#2e2e2e"
         fg = "#ffffff"
-        hover = "#3e3e3e"
         accent = "#444444"
 
         style.configure(".", font=font)
@@ -43,8 +42,6 @@ class TournamentGUI:
         style.map("TButton", background=[("active", accent)], foreground=[("active", fg)])
         style.map("TCheckbutton", background=[("active", bg)], foreground=[("active", fg)])
         style.map("TRadiobutton", background=[("active", bg)], foreground=[("active", fg)])
-        style.map("TCheckbutton", foreground=[("disabled", "#888")])
-        style.map("TRadiobutton", foreground=[("disabled", "#888")])
 
     def create_menu_bar(self):
         menubar = tk.Menu(self.root)
@@ -62,7 +59,8 @@ class TournamentGUI:
         menubar.add_cascade(label="File", menu=file_menu)
 
         help_menu = tk.Menu(menubar, tearoff=0)
-        help_menu.add_command(label="About", command=lambda: messagebox.showinfo("About", "Tournament Software built by James Cunningham with a GUI that has been \nBuilt with ❤️ using Tkinter."))
+        help_menu.add_command(label="About", command=lambda: messagebox.showinfo("About", "Tournament Software Created by James Cunningam/Princeblueblood. \nBuilt with ❤️ using Tkinter."))
+        help_menu.add_command(label="Usage", command=lambda: messagebox.showinfo("About", "You can add players, remove players, Submit match results, view standings, and redo last round."))
         menubar.add_cascade(label="Help", menu=help_menu)
 
     def clear_screen(self):
@@ -119,19 +117,31 @@ class TournamentGUI:
 
     def setup_round_screen(self):
         self.clear_screen()
-        self.result_data.clear()
-
         ttk.Label(self.root, text=f"Round {self.round_number}").pack(pady=10)
+
         main_frame = ttk.Frame(self.root)
-        main_frame.pack(fill='both', expand=True, padx=20, pady=10)
+        main_frame.pack(fill="both", expand=True, padx=20, pady=10)
+
+        main_frame.columnconfigure(0, weight=1)  # left padding
+        main_frame.columnconfigure(1, weight=0)  # match list center
+        main_frame.columnconfigure(2, weight=1)  # match details
 
         self.left_frame = ttk.Frame(main_frame)
-        self.left_frame.grid(row=0, column=0, sticky="n")
-        self.right_frame = ttk.LabelFrame(main_frame, text="Match Details", padding=10)
-        self.right_frame.grid(row=0, column=1, sticky="nsew", padx=(30, 10))
+        self.left_frame.grid(row=0, column=1, sticky="n")
 
-        self.match_listbox = tk.Listbox(self.left_frame, bg="#1e1e1e", fg="white", width=40, height=20, font=("Segoe UI", 10),
-                                        selectbackground="#444", selectforeground="white")
+        self.right_frame = ttk.LabelFrame(main_frame, text="Match Details", padding=10)
+        self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(30, 10))
+
+        self.match_listbox = tk.Listbox(
+            self.left_frame,
+            bg="#1e1e1e",
+            fg="white",
+            width=40,
+            height=20,
+            font=("Segoe UI", 10),
+            selectbackground="#444",
+            selectforeground="white",
+        )
         self.match_listbox.pack()
         self.match_listbox.bind("<<ListboxSelect>>", self.display_match_details)
 
@@ -139,7 +149,8 @@ class TournamentGUI:
 
     def pair_and_display(self):
         self.current_pairs = pair_round(self.players)
-        self.round_history.append((list(self.players[:]), list(self.current_pairs[:])))
+        self.round_history.append((list(self.players[:]), list(self.current_pairs[:]), self.result_data.copy()))
+        self.result_data.clear()
         self.match_listbox.delete(0, tk.END)
 
         for i, pair in enumerate(self.current_pairs):
@@ -257,7 +268,7 @@ class TournamentGUI:
             messagebox.showwarning("Undo Error", "No round to undo.")
             return
         self.round_number -= 1
-        self.players, self.current_pairs = self.round_history.pop()
+        self.players, self.current_pairs, self.result_data = self.round_history.pop()
         self.setup_round_screen()
 
 if __name__ == "__main__":
