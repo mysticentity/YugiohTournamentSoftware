@@ -1,4 +1,5 @@
-This is a work in progress, expect more updates in the future. extract all contents of the zip file and run .exe file to start. 
+This is a work in progress, expect more updates in the future. extract all contents of the zip file and run .exe file to start.
+Pictures are a bit outdated and all of the options have been moved to submenu's of the toolbar. 
 
 
 
