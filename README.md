@@ -1,5 +1,5 @@
 This is a work in progress, expect more updates in the future. extract all contents of the zip file and run .exe file to start.
-Pictures are a bit outdated and all of the options have been moved to submenu's of the toolbar. 
+Pictures may be a bit outdated and all of the options have been moved to submenu's of the toolbar. 
 
 
 
@@ -19,7 +19,7 @@ Thanks for checking this out.
 
 
 
-![Example of The tournament software and its current stage](https://i.imgur.com/y6Eruab.png)
-![Example of The tournament software and its current stage](https://i.imgur.com/WYrnz5T.png)
-![Example of The tournament software and its current stage](https://i.imgur.com/BoWtZuo.png)
-![Example of The tournament software and its current stage](https://i.imgur.com/cgRNzIB.png)
+![Example of The tournament software and its current stage](https://i.imgur.com/QVl0sJ6.jpeg)
+![Example of The tournament software and its current stage](https://i.imgur.com/xgpKqOE.jpeg)
+![Example of The tournament software and its current stage](https://i.imgur.com/uR6KNzf.jpeg)
+![Example of The tournament software and its current stage](https://i.imgur.com/vxItDDS.jpeg)
