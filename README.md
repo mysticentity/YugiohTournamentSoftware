@@ -9,7 +9,8 @@ Pictures may be a bit outdated and all of the options have been moved to submenu
 4. Once you have done this for each table you can now hit submit round results which is under options and it will automatically pair the next round and submit those results.
 5. Once you've completed all of the rounds you will receive a message alerting you the tournament has finished. Once done, you can click view standings to bring them up. This is also under options.
 
-I'm not entirely sure how well going back to a prior round and changing match results work but that is in fact implemented and should be done at the start of a round.
+I'm not entirely sure how well going back to a prior round and changing match results work but that is in fact implemented and should be done at the start of a round. There is a bug with this where
+none of the prior rounds selections are still checked and you will have to do it all over again. currently trying to figure out how to fix that.
 you can also add a person mid round and they will automatically receive a round one loss.
 
 This program should properly be using konami's official way of doing tiebreakers, calculations, ect. the sole reason I decided to work on it.
