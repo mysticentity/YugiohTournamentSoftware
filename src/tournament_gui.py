@@ -2,12 +2,12 @@ import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
 from Player import Player
 from main import pair_round, calculate_standings
+import copy
 
 class TournamentGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Tournament Manager")
-
         self.players = []
         self.dropped_players = []
         self.current_pairs = []
@@ -26,6 +26,7 @@ class TournamentGUI:
         style.theme_use("clam")
 
         font = ("Segoe UI", 11)
+        heading_font = ("Segoe UI", 14, "bold")
         bg = "#2e2e2e"
         fg = "#ffffff"
         accent = "#444444"
@@ -37,11 +38,11 @@ class TournamentGUI:
         style.configure("TCheckbutton", background=bg, foreground=fg)
         style.configure("TRadiobutton", background=bg, foreground=fg)
         style.configure("TLabelframe", background=bg, foreground=fg)
-        style.configure("TLabelframe.Label", background=bg, foreground=fg)
+        style.configure("TLabelframe.Label", background=bg, foreground=fg, font=heading_font)
 
-        style.map("TButton", background=[("active", accent)], foreground=[("active", fg)])
-        style.map("TCheckbutton", background=[("active", bg)], foreground=[("active", fg)])
-        style.map("TRadiobutton", background=[("active", bg)], foreground=[("active", fg)])
+        style.map("TButton", background=[], foreground=[])
+        style.map("TCheckbutton", background=[], foreground=[])
+        style.map("TRadiobutton", background=[], foreground=[])
 
     def create_menu_bar(self):
         menubar = tk.Menu(self.root)
@@ -56,7 +57,7 @@ class TournamentGUI:
         tournament_menu.add_command(label="View Standings", command=self.view_standings)
         tournament_menu.add_command(label="Undo Last Round", command=self.undo_last_round)
         tournament_menu.add_command(label="Add Late Player", command=self.add_late_player)
-        menubar.add_cascade(label="Options", menu=tournament_menu)
+        menubar.add_cascade(label="Tournament", menu=tournament_menu)
 
         help_menu = tk.Menu(menubar, tearoff=0)
         help_menu.add_command(label="About", command=lambda: messagebox.showinfo("About", "Tournament Software Created by James Cunningam/Princeblueblood. \nBuilt with ❤️ using Tkinter."))
@@ -71,20 +72,18 @@ class TournamentGUI:
     def setup_player_entry_screen(self):
         self.clear_screen()
         frame = ttk.Frame(self.root)
-        frame.pack(padx=20, pady=20)
+        frame.pack(padx=40, pady=30)
 
-        ttk.Label(frame, text="Enter Player Names").grid(row=0, column=0, columnspan=2)
-
+        ttk.Label(frame, text="Enter Player Names", font=("Segoe UI", 14, "bold")).grid(row=0, column=0, columnspan=2, pady=10)
         self.player_entry = ttk.Entry(frame, width=30)
-        self.player_entry.grid(row=1, column=0, padx=5, pady=5)
-
+        self.player_entry.grid(row=1, column=0, padx=5, pady=10)
         ttk.Button(frame, text="Add Player", command=self.add_player).grid(row=1, column=1, padx=5)
-        self.player_listbox = tk.Listbox(frame, bg="#1e1e1e", fg="white", width=40, height=20, font=("Segoe UI", 10),
-                                         selectbackground="#444", selectforeground="white")
-        self.player_listbox.grid(row=2, column=0, columnspan=2, pady=10)
 
-        ttk.Button(frame, text="Remove Selected", command=self.remove_selected_player).grid(row=3, column=0, pady=5)
-        ttk.Button(frame, text="Start Tournament", command=self.start_tournament).grid(row=3, column=1, pady=5)
+        self.player_listbox = tk.Listbox(frame, bg="#1e1e1e", fg="white", width=40, height=20, font=("Segoe UI", 10), selectbackground="#444", selectforeground="white", relief="flat", bd=2)
+        self.player_listbox.grid(row=2, column=0, columnspan=2, pady=10, padx=10)
+
+        ttk.Button(frame, text="Remove Selected", command=self.remove_selected_player).grid(row=3, column=0, pady=10)
+        ttk.Button(frame, text="Start Tournament", command=self.start_tournament).grid(row=3, column=1, pady=10)
 
     def add_player(self):
         name = self.player_entry.get().strip()
@@ -117,51 +116,32 @@ class TournamentGUI:
 
     def setup_round_screen(self):
         self.clear_screen()
-        ttk.Label(self.root, text=f"Round {self.round_number}").pack(pady=10)
+        ttk.Label(self.root, text=f"Round {self.round_number}", font=("Segoe UI", 14, "bold")).pack(pady=(20, 10))
 
         main_frame = ttk.Frame(self.root)
         main_frame.pack(fill="both", expand=True, padx=20, pady=10)
 
-        main_frame.columnconfigure(0, weight=1)  # left padding
-        main_frame.columnconfigure(1, weight=0)  # match list center
-        main_frame.columnconfigure(2, weight=1)  # match details
-
-        self.left_frame = ttk.Frame(main_frame)
-        self.left_frame.grid(row=0, column=1, sticky="n")
+        self.left_frame = ttk.LabelFrame(main_frame, text="Match Tables", padding=10)
+        self.left_frame.pack(side="left", fill="y", expand=True)
 
         self.right_frame = ttk.LabelFrame(main_frame, text="Match Details", padding=10)
-        self.right_frame.grid(row=0, column=2, sticky="nsew", padx=(30, 10))
+        self.right_frame.pack(side="right", fill="y", padx=(10, 30))
 
-        self.match_listbox = tk.Listbox(
-            self.left_frame,
-            bg="#1e1e1e",
-            fg="white",
-            width=40,
-            height=20,
-            font=("Segoe UI", 10),
-            selectbackground="#444",
-            selectforeground="white",
-        )
+        self.match_listbox = tk.Listbox(self.left_frame, bg="#1e1e1e", fg="white", width=40, height=20, font=("Segoe UI", 10), selectbackground="#444", selectforeground="white", relief="flat", bd=2)
         self.match_listbox.pack()
         self.match_listbox.bind("<<ListboxSelect>>", self.display_match_details)
 
-        self.pair_and_display()
-
-    def pair_and_display(self):
-        self.current_pairs = pair_round(self.players)
-        self.round_history.append((list(self.players[:]), list(self.current_pairs[:]), self.result_data.copy()))
-        self.result_data.clear()
-        self.match_listbox.delete(0, tk.END)
-
-        for i, pair in enumerate(self.current_pairs):
-            if pair[1] == "BYE":
-                self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} receives a BYE")
-                pair[0].wins.append("BYE")
-                self.result_data[i] = {"winner": "BYE", "drop1": False, "drop2": False}
-            else:
-                self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} vs {pair[1].name}")
-                self.result_data[i] = {"winner": "", "drop1": False, "drop2": False}
-
+        if len(self.round_history) < self.round_number:
+            self.pair_and_display()
+        else:
+            self.match_listbox.delete(0, tk.END)
+            for i, pair in enumerate(self.current_pairs):
+                if pair[1] == "BYE":
+                    self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} receives a BYE")
+                else:
+                    self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} vs {pair[1].name}")
+            self.match_listbox.select_set(0)
+            self.display_match_details(None)
     def display_match_details(self, event):
         for widget in self.right_frame.winfo_children():
             widget.destroy()
@@ -176,9 +156,13 @@ class TournamentGUI:
         p1, p2 = self.current_pairs[index]
         data = self.result_data.get(index, {"winner": "", "drop1": False, "drop2": False})
 
-        result_var = tk.StringVar(value=data["winner"])
-        drop1 = tk.BooleanVar(value=data["drop1"])
-        drop2 = tk.BooleanVar(value=data["drop2"])
+        result_var = tk.StringVar()
+        result_var.set(data.get("winner", ""))
+
+        drop1 = tk.BooleanVar()
+        drop1.set(data.get("drop1", False))
+        drop2 = tk.BooleanVar()
+        drop2.set(data.get("drop2", False))
 
         def update_result():
             self.result_data[index] = {
@@ -187,33 +171,36 @@ class TournamentGUI:
                 "drop2": drop2.get()
             }
 
-        ttk.Label(self.right_frame, text=f"Table {index+1}: {p1.name} vs {p2.name}").pack(pady=5)
+        ttk.Label(self.right_frame, text=f"Table {index+1}: {p1.name} vs {p2.name}", font=("Segoe UI", 12, "bold")).pack(pady=5)
 
         radio_box = ttk.Frame(self.right_frame)
-        radio_box.pack(pady=5)
-        ttk.Radiobutton(radio_box, text=f"{p1.name} wins", variable=result_var, value=p1.name, command=update_result).pack(anchor='w')
-        ttk.Radiobutton(radio_box, text=f"{p2.name} wins", variable=result_var, value=p2.name, command=update_result).pack(anchor='w')
-        ttk.Radiobutton(radio_box, text="Tie", variable=result_var, value="tie", command=update_result).pack(anchor='w')
+        radio_box.pack(pady=(10, 5))
+        ttk.Radiobutton(radio_box, text=f"{p1.name} wins", variable=result_var, value=p1.name, command=update_result).pack(anchor='w', pady=3)
+        ttk.Radiobutton(radio_box, text=f"{p2.name} wins", variable=result_var, value=p2.name, command=update_result).pack(anchor='w', pady=3)
+        ttk.Radiobutton(radio_box, text="Tie", variable=result_var, value="tie", command=update_result).pack(anchor='w', pady=3)
 
         ttk.Separator(self.right_frame).pack(fill='x', pady=10)
 
         drop_box = ttk.Frame(self.right_frame)
-        drop_box.pack(pady=5)
-        ttk.Checkbutton(drop_box, text=f"Drop {p1.name}", variable=drop1, command=update_result).pack(anchor='w', pady=2)
-        ttk.Checkbutton(drop_box, text=f"Drop {p2.name}", variable=drop2, command=update_result).pack(anchor='w', pady=2)
+        drop_box.pack(pady=(5, 5))
+        ttk.Checkbutton(drop_box, text=f"Drop {p1.name}", variable=drop1, command=update_result).pack(anchor='w', pady=4)
+        ttk.Checkbutton(drop_box, text=f"Drop {p2.name}", variable=drop2, command=update_result).pack(anchor='w', pady=4)
 
-    def add_late_player(self):
-        name = simpledialog.askstring("Add Late Player", "Enter the player's name:")
-        if not name:
-            return
-        name = name.strip()
-        if not name or any(p.name == name for p in self.players):
-            messagebox.showerror("Invalid Name", "Name must be unique and non-empty.")
-            return
-        new_player = Player(name)
-        new_player.losses.append("BYE")
-        self.players.append(new_player)
-        messagebox.showinfo("Player Added", f"{name} has been added with a Round 1 loss.")
+    def pair_and_display(self):
+        self.current_pairs = pair_round(self.players)
+        self.result_data.clear()
+        self.match_listbox.delete(0, tk.END)
+
+        for i, pair in enumerate(self.current_pairs):
+            if pair[1] == "BYE":
+                self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} receives a BYE")
+                pair[0].wins.append("BYE")
+                self.result_data[i] = {"winner": "BYE", "drop1": False, "drop2": False}
+            else:
+                self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} vs {pair[1].name}")
+                self.result_data[i] = {"winner": "", "drop1": False, "drop2": False}
+
+        self.round_history.append((copy.deepcopy(self.players), copy.deepcopy(self.current_pairs), copy.deepcopy(self.result_data)))
 
     def submit_results(self):
         for i, pair in enumerate(self.current_pairs):
@@ -258,10 +245,11 @@ class TournamentGUI:
         win = tk.Toplevel(self.root)
         win.title("Standings")
         win.configure(bg="#2e2e2e")
-        ttk.Label(win, text="Standings").pack(pady=10)
+        ttk.Label(win, text="Standings", font=("Segoe UI", 14, "bold")).pack(pady=10)
+
         sorted_players = sorted(self.players, key=lambda x: -int(x.tiebreaker))
         for i, p in enumerate(sorted_players):
-            ttk.Label(win, text=f"{i+1}. {p.name} - Tiebreaker: {p.tiebreaker}").pack(anchor='w', padx=10)
+            ttk.Label(win, text=f"{i+1}. {p.name} - Tiebreaker: {p.tiebreaker}").pack(anchor='w', padx=15, pady=2)
 
     def undo_last_round(self):
         if self.round_number <= 1 or not self.round_history:
@@ -270,6 +258,29 @@ class TournamentGUI:
         self.round_number -= 1
         self.players, self.current_pairs, self.result_data = self.round_history.pop()
         self.setup_round_screen()
+
+        # Restore the UI state of all tables
+        for i in range(len(self.current_pairs)):
+            if self.current_pairs[i][1] != "BYE":
+                self.match_listbox.select_clear(0, tk.END)
+                self.match_listbox.select_set(i)
+                self.display_match_details(None)
+
+        # Reset view to first match
+        self.match_listbox.select_set(0)
+        self.display_match_details(None)
+    def add_late_player(self):
+        name = simpledialog.askstring("Add Late Player", "Enter the player's name:")
+        if not name:
+            return
+        name = name.strip()
+        if not name or any(p.name == name for p in self.players):
+            messagebox.showerror("Invalid Name", "Name must be unique and non-empty.")
+            return
+        new_player = Player(name)
+        new_player.losses.append("BYE")
+        self.players.append(new_player)
+        messagebox.showinfo("Player Added", f"{name} has been added with a Round 1 loss.")
 
 if __name__ == "__main__":
     root = tk.Tk()
