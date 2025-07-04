@@ -15,6 +15,7 @@ class TournamentGUI:
         self.num_rounds = 0
         self.round_history = []
         self.result_data = {}
+        self.saved_results_history = []
 
         self.setup_styles()
         self.create_menu_bar()
@@ -187,9 +188,10 @@ class TournamentGUI:
         ttk.Checkbutton(drop_box, text=f"Drop {p2.name}", variable=drop2, command=update_result).pack(anchor='w', pady=4)
 
     def pair_and_display(self):
+        self.round_history.append((copy.deepcopy(self.players), copy.deepcopy(self.current_pairs), copy.deepcopy(self.result_data)))
         self.current_pairs = pair_round(self.players)
-        self.result_data.clear()
-        self.match_listbox.delete(0, tk.END)
+        #self.result_data.clear()
+        #self.match_listbox.delete(0, tk.END)
 
         for i, pair in enumerate(self.current_pairs):
             if pair[1] == "BYE":
@@ -200,7 +202,7 @@ class TournamentGUI:
                 self.match_listbox.insert(tk.END, f"Table {i+1}: {pair[0].name} vs {pair[1].name}")
                 self.result_data[i] = {"winner": "", "drop1": False, "drop2": False}
 
-        self.round_history.append((copy.deepcopy(self.players), copy.deepcopy(self.current_pairs), copy.deepcopy(self.result_data)))
+        
 
     def submit_results(self):
         for i, pair in enumerate(self.current_pairs):
@@ -227,6 +229,8 @@ class TournamentGUI:
                 self.drop_player(p1)
             if data["drop2"]:
                 self.drop_player(p2)
+        
+        self.saved_results_history.append(copy.deepcopy(self.result_data))
 
         self.round_number += 1
         if self.round_number > self.num_rounds:
@@ -258,6 +262,12 @@ class TournamentGUI:
         self.round_number -= 1
         self.players, self.current_pairs, self.result_data = self.round_history.pop()
         self.setup_round_screen()
+        
+
+        if self.saved_results_history:
+            self.result_data = self.saved_results_history.pop()
+        self.match_listbox.select_set(0)
+        self.display_match_details(None)
 
         # Restore the UI state of all tables
         for i in range(len(self.current_pairs)):
